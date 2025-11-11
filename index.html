@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lista de CFOP</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: #f9f9f9;
+      color: #333;
+      padding: 20px;
+    }
+    .container {
+      max-width: 800px;
+      margin: auto;
+      background: white;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      margin-bottom: 15px;
+    }
+    button {
+      background: #6C43D0;
+      color: #fff;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #532f9e;
+    }
+    #results div {
+      padding: 6px;
+      border-bottom: 1px solid #eee;
+    }
+    #controls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>🔍 Buscar CFOP</h2>
+    <input id="search" type="text" placeholder="Digite o CFOP ou parte da descrição...">
+    <div id="results"></div>
+    <div id="controls">
+      <button id="prev">◀️</button>
+      <span id="pageIndicator">Página 1</span>
+      <button id="next">▶️</button>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      function normalizeText(txt) {
+        return txt.toString()
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "")
+          .replace(/[^\w\s]/g, "")
+          .replace(/\s+/g, " ")
+          .trim()
+          .toLowerCase();
+      }
+
+      const cfops = [
+        { "Tabela de CFOP": "1.101", "Código Fiscal de Operações e": "Compra para industrialização ou produção rural" },
+        { "Tabela de CFOP": "1.102", "Código Fiscal de Operações e": "Compra para comercialização" },
+        { "Tabela de CFOP": "1.103", "Código Fiscal de Operações e": "Compra de mercadoria recebida em consignação mercantil" },
+        { "Tabela de CFOP": "1.104", "Código Fiscal de Operações e": "Compra para industrialização em consórcio" }
+        // ➕ Você pode adicionar mais linhas aqui
+      ];
+
+      const input = document.getElementById("search");
+      const results = document.getElementById("results");
+      const prevBtn = document.getElementById("prev");
+      const nextBtn = document.getElementById("next");
+      const pageIndicator = document.getElementById("pageIndicator");
+
+      let filtered = [...cfops];
+      let currentPage = 1;
+      const perPage = 10;
+
+      function renderPage() {
+        results.innerHTML = "";
+        const start = (currentPage - 1) * perPage;
+        const end = start + perPage;
+        const pageItems = filtered.slice(start, end);
+
+        if (pageItems.length === 0) {
+          results.innerHTML = "<p>Nenhum CFOP encontrado.</p>";
+          return;
+        }
+
+        pageItems.forEach(cfop => {
+          const el = document.createElement("div");
+          el.innerHTML = `<strong>${cfop["Tabela de CFOP"]}</strong> — ${cfop["Código Fiscal de Operações e"]}`;
+          results.appendChild(el);
+        });
+
+        const totalPages = Math.ceil(filtered.length / perPage);
+        pageIndicator.textContent = `Página ${currentPage} de ${totalPages}`;
+        prevBtn.disabled = currentPage === 1;
+        nextBtn.disabled = currentPage === totalPages;
+      }
+
+      input.addEventListener("input", function() {
+        const q = normalizeText(this.value);
+        filtered = cfops.filter(cfop => {
+          const code = normalizeText(cfop["Tabela de CFOP"]);
+          const desc = normalizeText(cfop["Código Fiscal de Operações e"]);
+          return code.includes(q) || desc.includes(q);
+        });
+        currentPage = 1;
+        renderPage();
+      });
+
+      nextBtn.addEventListener("click", () => { currentPage++; renderPage(); });
+      prevBtn.addEventListener("click", () => { currentPage--; renderPage(); });
+
+      renderPage();
+    });
+  </script>
+</body>
+</html>
