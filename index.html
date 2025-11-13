@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lista de CFOP</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: #f9f9f9;
+      color: #333;
+      padding: 20px;
+    }
+
+    #results {
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+      padding: 15px 20px;
+      transition: box-shadow 0.3s ease;
+    }
+
+    #results div:hover {
+      background: rgba(108, 67, 208, 0.05);
+      transform: translateX(3px);
+      transition: all 0.2s ease;
+    }
+
+    #search:focus {
+      outline: none;
+      border-color: #6C43D0;
+      box-shadow: 0 0 6px rgba(108, 67, 208, 0.9);
+    }
+
+    #pagination button:not(:disabled):hover img {
+      transform: scale(1.15);
+      filter: brightness(1.2);
+      transition: all 0.2s ease;
+    }
+
+    #pagination span {
+      font-weight: 500;
+      color: #6C43D0;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: auto;
+      background: white;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      margin-bottom: 15px;
+    }
+
+    button {
+      background: #6C43D0;
+      color: #fff;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #532f9e;
+    }
+
+    #results div {
+      padding: 6px;
+      border-bottom: 1px solid #eee;
+    }
+
+    #controls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+<div style="max-width:800px;margin:auto;padding:20px;font-family:sans-serif;">
+  <h2 style="display:flex;align-items:center;gap:10px;">
+    <span style="font-size:22px;">🔍</span> Buscar CFOP
+  </h2>
+  <input id="search" type="text" placeholder="Digite o CFOP ou parte da descrição..." />
+
+  <div id="results"></div>
+
+  <div id="pagination" style="display:flex;justify-content:center;align-items:center;margin-top:20px;gap:10px;">
+    <button id="prev" disabled>
+      <img src="https://supratechsistemas.com.br/wp-content/uploads/2025/11/seta-esquerda.png" alt="Anterior" style="width:24px;height:24px;opacity:0.6;">
+    </button>
+
+    <span id="pageIndicator">Página 1</span>
+
+    <button id="next">
+      <img src="https://supratechsistemas.com.br/wp-content/uploads/2025/11/seta-direita.png" alt="Próximo" style="width:24px;height:24px;opacity:1;">
+    </button>
+  </div>
+</div>
+
+<!-- Carrega o JavaScript externo -->
+<script src="script.js"></script>
+</body>
+</html>
