@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lista de CFOP</title>
+  <title>Busca CFOP - SupraTech</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -110,7 +110,103 @@
   </div>
 </div>
 
-<!-- Carrega o JavaScript externo -->
-<script src="script.js"></script>
+<script>
+  // ===============================
+  // 📘 Função para normalizar texto
+  // ===============================
+  function normalizeText(txt) {
+    return txt
+      .toString()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[^\w\s]/g, "")
+      .replace(/\s+/g, " ")
+      .trim()
+      .toLowerCase();
+  }
+
+  // ===============================
+  // 🧩 Lista de CFOPs (resumida p/ teste)
+  // ===============================
+  const cfops = [
+    { "Tabela de CFOP": "1.101", "Descrição": "Compra para industrialização ou produção rural" },
+    { "Tabela de CFOP": "1.102", "Descrição": "Compra para comercialização" },
+    { "Tabela de CFOP": "5.101", "Descrição": "Venda de produção do estabelecimento" },
+    { "Tabela de CFOP": "5.102", "Descrição": "Venda de mercadoria adquirida ou recebida de terceiros" },
+    { "Tabela de CFOP": "6.101", "Descrição": "Venda de produção do estabelecimento (interestadual)" },
+    { "Tabela de CFOP": "6.102", "Descrição": "Venda de mercadoria adquirida ou recebida de terceiros (interestadual)" },
+    { "Tabela de CFOP": "7.101", "Descrição": "Venda de produção do estabelecimento (exterior)" },
+    { "Tabela de CFOP": "7.102", "Descrição": "Venda de mercadoria adquirida ou recebida de terceiros (exterior)" }
+  ];
+
+  // ===============================
+  // 🔎 Função de busca e paginação
+  // ===============================
+  const resultsDiv = document.getElementById("results");
+  const searchInput = document.getElementById("search");
+  const prevBtn = document.getElementById("prev");
+  const nextBtn = document.getElementById("next");
+  const pageIndicator = document.getElementById("pageIndicator");
+
+  let currentPage = 1;
+  const itemsPerPage = 10;
+  let filteredCFOPs = cfops;
+
+  function displayResults() {
+    resultsDiv.innerHTML = "";
+
+    const start = (currentPage - 1) * itemsPerPage;
+    const end = start + itemsPerPage;
+    const pageItems = filteredCFOPs.slice(start, end);
+
+    if (pageItems.length === 0) {
+      resultsDiv.innerHTML = "<p>Nenhum CFOP encontrado.</p>";
+    } else {
+      pageItems.forEach(cfop => {
+        const itemDiv = document.createElement("div");
+        itemDiv.innerHTML = `<strong>${cfop["Tabela de CFOP"]}</strong> - ${cfop["Descrição"]}`;
+        resultsDiv.appendChild(itemDiv);
+      });
+    }
+
+    pageIndicator.textContent = `Página ${currentPage}`;
+    prevBtn.disabled = currentPage === 1;
+    nextBtn.disabled = end >= filteredCFOPs.length;
+  }
+
+  function searchCFOP() {
+    const query = normalizeText(searchInput.value);
+
+    if (query === "") {
+      filteredCFOPs = cfops;
+    } else {
+      filteredCFOPs = cfops.filter(cfop =>
+        normalizeText(cfop["Tabela de CFOP"]).includes(query) ||
+        normalizeText(cfop["Descrição"]).includes(query)
+      );
+    }
+
+    currentPage = 1;
+    displayResults();
+  }
+
+  // Eventos
+  searchInput.addEventListener("input", searchCFOP);
+  prevBtn.addEventListener("click", () => {
+    if (currentPage > 1) {
+      currentPage--;
+      displayResults();
+    }
+  });
+  nextBtn.addEventListener("click", () => {
+    if ((currentPage * itemsPerPage) < filteredCFOPs.length) {
+      currentPage++;
+      displayResults();
+    }
+  });
+
+  // Inicializa
+  displayResults();
+</script>
 </body>
 </html>
